@@ -3,39 +3,25 @@ package com.example.gateapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PointF;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.os.Handler;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.budiyev.android.codescanner.CodeScanner;
-import com.budiyev.android.codescanner.CodeScannerView;
-import com.budiyev.android.codescanner.DecodeCallback;
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
 import com.example.gateapp.CarDetails.CarsModel;
-import com.example.gateapp.CarDetails.CarsViewHolder;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.zxing.Result;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,9 +33,7 @@ public class MainActivity extends AppCompatActivity implements QRCodeReaderView.
     QRCodeReaderView qrCodeReaderView;
     String aiPlate, userPlate, userId, userFinished;
     Toolbar toolbar;
-
-    FirebaseRecyclerAdapter<CarsModel, CarsViewHolder> carAdapter;
-    FirebaseRecyclerOptions<CarsModel> options;
+    boolean repeat = true;
 
 
     DatabaseReference mUserRef, walletRef, mAdminRef, carRef, aiPlatesRef;
@@ -70,42 +54,17 @@ public class MainActivity extends AppCompatActivity implements QRCodeReaderView.
     }
 
     private void AiCarValidation() {
+        aiPlatesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                aiPlate = snapshot.child("plate").getValue().toString();
+            }
 
-        aiPlate = " ا ب ب 123";
-//        aiPlatesRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                aiPlate = snapshot.child("0").getValue().toString();
-//            }
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//        options = new FirebaseRecyclerOptions.Builder<CarsModel>().setQuery(carRef, CarsModel.class).build();
-//        carAdapter = new FirebaseRecyclerAdapter<CarsModel, CarsViewHolder>(options) {
-//            @Override
-//            protected void onBindViewHolder(@NonNull CarsViewHolder holder, @SuppressLint("RecyclerView") int position, @NonNull CarsModel model) {
-//                userPlate= model.getCarNumbers()+model.getCarLetters();
-//                if (userPlate.equals(aiPlate)){
-//                    Toast.makeText(MainActivity.this, model.getUserID(), Toast.LENGTH_SHORT).show();
-//
-//                }else {
-//                    Toast.makeText(MainActivity.this, "Validation failed", Toast.LENGTH_SHORT).show();
-//                }
-//
-//            }
-//
-//            @NonNull
-//            @Override
-//            public CarsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//                View view = LayoutInflater.from(parent.getContext())
-//                        .inflate(R.layout.activity_main,parent,false);
-//
-//                return new CarsViewHolder(view);
-//            }
-//        };
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
         carRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -120,9 +79,16 @@ public class MainActivity extends AppCompatActivity implements QRCodeReaderView.
                     if (userPlate.equals(aiPlate)) {
                         userId = carsModels.get(i).getUserID();
                         Toast.makeText(MainActivity.this, carsModels.get(i).getUserID(), Toast.LENGTH_SHORT).show();
+                        HashMap hashMap = new HashMap();
+                        hashMap.put("plate", "Empty");
+                        aiPlatesRef.updateChildren(hashMap);
                         Intent intent = new Intent(MainActivity.this, PayActivity.class);
                         intent.putExtra("userID", carsModels.get(i).getUserID());
                         startActivity(intent);
+                        finish();
+
+                    } else if (aiPlate.equals("Empty")) {
+
 
                     } else {
                         Toast.makeText(MainActivity.this, "Failed", Toast.LENGTH_SHORT).show();
@@ -135,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements QRCodeReaderView.
                 Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+
     }
 
 
@@ -194,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements QRCodeReaderView.
         mUserRef = FirebaseDatabase.getInstance().getReference().child("Users");
         mAdminRef = FirebaseDatabase.getInstance().getReference().child("Admins");
         walletRef = FirebaseDatabase.getInstance().getReference().child("Wallets");
-        aiPlatesRef = FirebaseDatabase.getInstance().getReference().child("AI_plates");
+        aiPlatesRef = FirebaseDatabase.getInstance().getReference().child("Ai_plates");
         carRef = FirebaseDatabase.getInstance().getReference().child("Cars");
 
 

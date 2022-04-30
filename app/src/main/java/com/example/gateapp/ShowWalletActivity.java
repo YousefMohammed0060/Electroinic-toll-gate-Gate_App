@@ -33,8 +33,8 @@ public class ShowWalletActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 if (snapshot.exists()){
-                    walletName.append(snapshot.child("WalletName").getValue().toString());
-                    walletBalance.append(snapshot.child("WalletBalance").getValue().toString()+" L.E");
+                    walletName.setText("Wallet Name: "+snapshot.child("WalletName").getValue().toString());
+                    walletBalance.setText("Wallet Balance: "+snapshot.child("WalletBalance").getValue().toString()+" L.E");
                 }else {
                     walletName.setText("User Don't have Wallet");
                     walletName.setTextColor(ContextCompat.getColor(ShowWalletActivity.this, R.color.red));

@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements QRCodeReaderView.
     String aiPlate, userPlate, userId, userFinished;
     Toolbar toolbar;
     boolean repeat = true;
-
+    List<CarsModel> carsModels = new ArrayList<>();
 
     DatabaseReference mUserRef, walletRef, mAdminRef, carRef, aiPlatesRef;
 
@@ -54,27 +54,29 @@ public class MainActivity extends AppCompatActivity implements QRCodeReaderView.
     }
 
     private void AiCarValidation() {
-        aiPlatesRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                aiPlate = snapshot.child("plate").getValue().toString();
-                aiPlate = aiPlate.replaceAll("\\s+", "");
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
         carRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<CarsModel> carsModels = new ArrayList<>();
+
                 carsModels.clear();
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     CarsModel carsModel = postSnapshot.getValue(CarsModel.class);
                     carsModels.add(carsModel);
                 }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        aiPlatesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                aiPlate = snapshot.child("plate").getValue().toString();
+                aiPlate = aiPlate.replaceAll("\\s+", "");
+
                 for (int i = 0; i < carsModels.size(); i++) {
                     userPlate = carsModels.get(i).getFullPlateNO();
                     userPlate = userPlate.replaceAll("\\s+", "");
@@ -100,9 +102,10 @@ public class MainActivity extends AppCompatActivity implements QRCodeReaderView.
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+
             }
         });
+
 
     }
 

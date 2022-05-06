@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements QRCodeReaderView.
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 aiPlate = snapshot.child("plate").getValue().toString();
+                aiPlate = aiPlate.replaceAll("\\s+", "");
             }
 
             @Override
@@ -75,7 +76,8 @@ public class MainActivity extends AppCompatActivity implements QRCodeReaderView.
                     carsModels.add(carsModel);
                 }
                 for (int i = 0; i < carsModels.size(); i++) {
-                    userPlate = carsModels.get(i).getCarLetters();
+                    userPlate = carsModels.get(i).getFullPlateNO();
+                    userPlate = userPlate.replaceAll("\\s+", "");
                     if (userPlate.equals(aiPlate)) {
                         userId = carsModels.get(i).getUserID();
                         Toast.makeText(MainActivity.this, carsModels.get(i).getUserID(), Toast.LENGTH_SHORT).show();

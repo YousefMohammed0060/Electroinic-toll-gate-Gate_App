@@ -92,8 +92,7 @@ public class MainActivity extends AppCompatActivity implements QRCodeReaderView.
                         finish();
 
                     } else if (aiPlate.equals("Empty")) {
-
-
+                        Toast.makeText(MainActivity.this, "Empty", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(MainActivity.this, "Failed", Toast.LENGTH_SHORT).show();
                     }

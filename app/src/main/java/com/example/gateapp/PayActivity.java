@@ -121,7 +121,7 @@ public class PayActivity extends AppCompatActivity {
                     } else {
                         mLoadingBar.dismiss();
                         createFailedBill();
-                        payMessage.setText("Operation Failed");
+                        payMessage.setText("Operation Failed \nBalance not enough");
                         payMessage.setTextColor(ContextCompat.getColor(PayActivity.this, R.color.red));
                         walletNameTv.setText("Wallet Name: " + snapshot.child("WalletName").getValue().toString());
                         walletBalanceTv.setText("Wallet Balance: " + newWalletBalance);
@@ -167,7 +167,7 @@ public class PayActivity extends AppCompatActivity {
                 startActivity(new Intent(PayActivity.this,MainActivity.class));
                 finish();
             }
-        }, 5000);
+        }, 3000);
     }
 
     private void createSuccessBill() {

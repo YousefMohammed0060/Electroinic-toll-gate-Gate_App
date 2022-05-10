@@ -31,9 +31,8 @@ public class MainActivity extends AppCompatActivity implements QRCodeReaderView.
 
     private static final int MY_CAMERA_REQUEST_CODE = 100;
     QRCodeReaderView qrCodeReaderView;
-    String aiPlate, userPlate, userId, userFinished;
+    String aiPlate, userPlate, userId;
     Toolbar toolbar;
-    boolean repeat = true;
     List<CarsModel> carsModels = new ArrayList<>();
 
     DatabaseReference mUserRef, walletRef, mAdminRef, carRef, aiPlatesRef;
@@ -82,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements QRCodeReaderView.
                     userPlate = userPlate.replaceAll("\\s+", "");
                     if (userPlate.equals(aiPlate)) {
                         userId = carsModels.get(i).getUserID();
-                        Toast.makeText(MainActivity.this, carsModels.get(i).getUserID(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Just Sec", Toast.LENGTH_SHORT).show();
                         HashMap hashMap = new HashMap();
                         hashMap.put("plate", "Empty");
                         aiPlatesRef.updateChildren(hashMap);
@@ -92,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements QRCodeReaderView.
                         finish();
 
                     } else if (aiPlate.equals("Empty")) {
-                        Toast.makeText(MainActivity.this, "Empty", Toast.LENGTH_SHORT).show();
+
                     } else {
                         Toast.makeText(MainActivity.this, "Failed", Toast.LENGTH_SHORT).show();
                     }

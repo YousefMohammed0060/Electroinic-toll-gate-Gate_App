@@ -98,6 +98,7 @@ public class PayActivity extends AppCompatActivity {
 
                                 HashMap gateMap=new HashMap();
                                 gateMap.put("status",1);
+                                gateMap.put("message","Gate Opened");
                                 gateRef.updateChildren(gateMap).addOnCompleteListener(new OnCompleteListener() {
                                     @Override
                                     public void onComplete(@NonNull Task task) {
@@ -165,9 +166,18 @@ public class PayActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             public void run() {
                 startActivity(new Intent(PayActivity.this,MainActivity.class));
+                HashMap gateMap=new HashMap();
+                gateMap.put("status",0);
+                gateMap.put("message","Gate Closed");
+                gateRef.updateChildren(gateMap).addOnCompleteListener(new OnCompleteListener() {
+                    @Override
+                    public void onComplete(@NonNull Task task) {
+                    }
+                });
                 finish();
             }
         }, 3000);
+
     }
 
     private void createSuccessBill() {

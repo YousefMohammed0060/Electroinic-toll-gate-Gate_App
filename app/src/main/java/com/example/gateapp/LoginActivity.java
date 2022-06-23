@@ -25,7 +25,6 @@ import com.google.firebase.database.ValueEventListener;
 public class LoginActivity extends AppCompatActivity {
 
     EditText LoginEmail,LoginPassword;
-    TextView ForgotPassword;
 
     FirebaseAuth mAuth;
     DatabaseReference mAdminRef;
@@ -40,7 +39,6 @@ public class LoginActivity extends AppCompatActivity {
     private void inti() {
         LoginEmail=findViewById(R.id.LoginEmail);
         LoginPassword=findViewById(R.id.LoginPassword);
-        ForgotPassword=findViewById(R.id.ForgotPassword);
 
         mAuth = FirebaseAuth.getInstance();
         mAdminRef = FirebaseDatabase.getInstance().getReference().child("Admins");
@@ -87,7 +85,5 @@ public class LoginActivity extends AppCompatActivity {
         field.requestFocus();
     }
 
-    public void forgetPassTV(View view) {
-//        startActivity(new Intent(LoginActivity.this, ForgetPasswordActivity.class));
-    }
+
 }

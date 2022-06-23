@@ -165,7 +165,7 @@ public class PayActivity extends AppCompatActivity {
 
         handler.postDelayed(new Runnable() {
             public void run() {
-                startActivity(new Intent(PayActivity.this,MainActivity.class));
+                startActivity(new Intent(PayActivity.this, ScannerActivity.class));
                 HashMap gateMap=new HashMap();
                 gateMap.put("status",0);
                 gateMap.put("message","Gate Closed");

@@ -9,14 +9,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PointF;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
 import com.example.gateapp.CarDetails.CarsModel;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,7 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements QRCodeReaderView.OnQRCodeReadListener {
+public class ScannerActivity extends AppCompatActivity implements QRCodeReaderView.OnQRCodeReadListener {
 
     private static final int MY_CAMERA_REQUEST_CODE = 100;
     QRCodeReaderView qrCodeReaderView;
@@ -37,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements QRCodeReaderView.
 
     DatabaseReference mUserRef, walletRef, mAdminRef, carRef, aiPlatesRef;
 
-//    String city,nationalID,phone,profileImage,username,ID;
+
 
 
     @Override
@@ -49,7 +46,6 @@ public class MainActivity extends AppCompatActivity implements QRCodeReaderView.
         AiCarValidation();
 
 
-//        AddAdmin();
     }
 
     private void AiCarValidation() {
@@ -67,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements QRCodeReaderView.
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(ScannerActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
         aiPlatesRef.addValueEventListener(new ValueEventListener() {
@@ -81,11 +77,11 @@ public class MainActivity extends AppCompatActivity implements QRCodeReaderView.
                     userPlate = userPlate.replaceAll("\\s+", "");
                     if (userPlate.equals(aiPlate)) {
                         userId = carsModels.get(i).getUserID();
-                        Toast.makeText(MainActivity.this, "Just Sec", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ScannerActivity.this, "Just Sec", Toast.LENGTH_SHORT).show();
                         HashMap hashMap = new HashMap();
                         hashMap.put("plate", "Empty");
                         aiPlatesRef.updateChildren(hashMap);
-                        Intent intent = new Intent(MainActivity.this, PayActivity.class);
+                        Intent intent = new Intent(ScannerActivity.this, PayActivity.class);
                         intent.putExtra("userID", carsModels.get(i).getUserID());
                         startActivity(intent);
                         finish();
@@ -93,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements QRCodeReaderView.
                     } else if (aiPlate.equals("Empty")) {
 
                     } else {
-                        Toast.makeText(MainActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ScannerActivity.this, "Failed", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -108,49 +104,9 @@ public class MainActivity extends AppCompatActivity implements QRCodeReaderView.
     }
 
 
-//    private void AddAdmin() {
-//        mUserRef.child("YZr5Skt5j8NEeFjZnRnq54pZLjE2").addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                username=snapshot.child("username").getValue().toString();
-//                profileImage=snapshot.child("profileImage").getValue().toString();
-//                phone=snapshot.child("phone").getValue().toString();
-//                nationalID=snapshot.child("nationalID").getValue().toString();
-//                city=snapshot.child("city").getValue().toString();
-//
-//                HashMap hashMap=new HashMap();
-//                hashMap.put("username",username);
-//                hashMap.put("profileImage",profileImage);
-//                hashMap.put("phone",phone);
-//                hashMap.put("nationalID",nationalID);
-//                hashMap.put("city",city);
-//                hashMap.put("email","muhamedelsayed2211@gmail.com");
-//                hashMap.put("password",snapshot.child("password").getValue().toString());
-//                hashMap.put("userId",snapshot.child("userId").getValue().toString());
-//
-//                mAdminRef.child("YZr5Skt5j8NEeFjZnRnq54pZLjE2").updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener() {
-//                    @Override
-//                    public void onSuccess(Object o) {
-//                        Toast.makeText(MainActivity.this, "Done", Toast.LENGTH_SHORT).show();
-//                    }
-//                }).addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//    }
-
     private void inti() {
         qrCodeReaderView = (QRCodeReaderView) findViewById(R.id.qrdecoderview);
-        qrCodeReaderView.setOnQRCodeReadListener((QRCodeReaderView.OnQRCodeReadListener) MainActivity.this);
+        qrCodeReaderView.setOnQRCodeReadListener((QRCodeReaderView.OnQRCodeReadListener) ScannerActivity.this);
         qrCodeReaderView.setQRDecodingEnabled(true);
         qrCodeReaderView.setAutofocusInterval(2000L);
         qrCodeReaderView.setFrontCamera();
@@ -204,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements QRCodeReaderView.
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            startActivity(new Intent(ScannerActivity.this, LoginActivity.class));
         }
         return true;
     }
@@ -212,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements QRCodeReaderView.
     @Override
     public void onQRCodeRead(String text, PointF[] points) {
 
-        Intent intent = new Intent(MainActivity.this, PayActivity.class);
+        Intent intent = new Intent(ScannerActivity.this, PayActivity.class);
         intent.putExtra("userID", text);
         startActivity(intent);
         finish();

@@ -176,7 +176,7 @@ public class PayActivity extends AppCompatActivity {
                 });
                 finish();
             }
-        }, 3000);
+        }, 8000);
 
     }
 

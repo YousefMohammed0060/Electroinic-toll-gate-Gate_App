@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +29,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class UserDetailsActivity extends AppCompatActivity {
 
     TextView userID, username, userEmail, userNationalID, userPhone, userCity;
-    CircleImageView userProfileImage;
+    ImageView userProfileImage;
     String userKey, Email, Password;
 
     FirebaseAuth mAuth;
